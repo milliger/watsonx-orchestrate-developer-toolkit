@@ -236,7 +236,7 @@ async def get_llm_stream(messages: List[Message], model: str, thread_id: str, to
                         current_timestamp = int(time.time())
                         content2 = {
                             "response_type": "conversational_search",
-                            "text": "content",
+                            "text": content,
                             "citations": [{
                                 "body": "Some Body Text",
                                 "range_end": 12,
