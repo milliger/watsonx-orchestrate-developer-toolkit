@@ -234,6 +234,27 @@ async def get_llm_stream(messages: List[Message], model: str, thread_id: str, to
                 if content:
                     if isinstance(content, str):
                         current_timestamp = int(time.time())
+                        content2 = {
+                            "response_type": "conversational_search",
+                            "text": "content",
+                            "citations": [{
+                                "body": "Some Body Text",
+                                "range_end": 12,
+                                "range_start": 2,
+                                "search_result_idx": 0,
+                                "text": "Some Text Text",
+                                "title": "Some Title",
+                                "url": ""
+                            }, {
+                                "body": "Some Body Text",
+                                "range_end": 10,
+                                "range_start": 5,
+                                "search_result_idx": 0,
+                                "text": "Some Text Text",
+                                "title": "Some Title",
+                                "url": ""
+                            }]
+                        }
                         struct = {
                             "id": str(uuid.uuid4()),
                             "object": "thread.message.delta",
@@ -243,7 +264,7 @@ async def get_llm_stream(messages: List[Message], model: str, thread_id: str, to
                             "choices": [
                                 {
                                     "delta": {
-                                        "content": content,
+                                        "content": content2,
                                         "role": "assistant",
                                     }
                                 }
@@ -252,6 +273,7 @@ async def get_llm_stream(messages: List[Message], model: str, thread_id: str, to
                         event_content = format_resp(struct)
                         logger.debug("Sending event content: " + event_content)
                         accumulated_contents += content
+                        print('')
                         yield event_content
                     elif isinstance(content, list):
                         for item in content:
